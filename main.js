@@ -82,3 +82,39 @@ var flattenData=(data)=>{
     }
     return result;
 }
+
+$(document).ready(function () {
+    
+    $('#jsonInput').change(function(e){
+        var fileName = e.target.files[0].name;
+        console.log('The file "' + fileName +  '" has been selected.');
+
+        readFile(e.target)
+    });
+
+
+
+});
+
+function readFile(input) {
+    let file = input.files[0];
+  
+    let reader = new FileReader();
+  
+    reader.readAsText(file);
+  
+    reader.onload = function() {
+      console.log(JSON.parse(reader.result));
+      let jsonData = JSON.parse(reader.result);
+      let flattenJSON = flattenData(jsonData);
+
+      console.log(flattenJSON);
+      //convert it to excel, make it downloadable
+
+    };
+  
+    reader.onerror = function() {
+      console.log(reader.error);
+    };
+  
+  }
