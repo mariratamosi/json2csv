@@ -9,7 +9,7 @@ fetch(`test.json`)
     let result = flattenData(data);
     console.log("json to flatten data ", result);
 
-    createExcel(result);
+    formatCSV(result);
 
     result.map((items) => {
       items.keys = items.keys.split("/");

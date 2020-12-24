@@ -1,43 +1,39 @@
-var createNestedJson = (data) => {
-  console.log("createNestedJSON", data);
-  if (data.length == 0) {
-    //console.log(data);
-    return;
-  }
+/*
 
-  if (data[0].keys.length == 0) {
-    //console.log("final value "+data[0].value);
-    return data[0].value;
-  }
+1. read json file
+2. flattenData ["a/b/c","B"]
+3. formatCSV
+*/
 
-  //console.log(data);
+$(document).ready(function () {
+  $("#jsonInput").change(function (e) {
+    var fileName = e.target.files[0].name;
+    console.log('The file "' + fileName + '" has been selected.');
 
-  let groupBater = data[0].keys[0];
-
-  let result = {};
-  let secondResult = {};
-
-  let firstGroup = data.filter((items) => {
-    return items.keys.indexOf(groupBater) == 0;
+    readJSONFile(e.target);
   });
+});
 
-  let secondGroup = data.filter((items) => {
-    return items.keys.indexOf(groupBater) != 0;
-  });
+function readJSONFile(input) {
+  let file = input.files[0];
 
-  firstGroup.map((items) => {
-    items.keys.shift();
-  });
+  let reader = new FileReader();
 
-  //console.log(firstGroup);
+  reader.readAsText(file);
 
-  //console.log(secondGroup);
+  reader.onload = function () {
+    console.log(JSON.parse(reader.result));
+    let jsonData = JSON.parse(reader.result);
+    let flattenJSON = flattenData(jsonData);
 
-  result[groupBater] = createNestedJson(firstGroup);
-  secondResult = createNestedJson(secondGroup);
+    console.log(flattenJSON);
+    formatCSV(flattenJSON);
+  };
 
-  return { ...result, ...secondResult };
-};
+  reader.onerror = function () {
+    console.log(reader.error);
+  };
+}
 
 var flattenData = (data) => {
   let result = [];
@@ -61,3 +57,21 @@ var flattenData = (data) => {
   }
   return result;
 };
+
+function formatCSV(jsonData) {
+  let csv = "";
+
+  jsonData.forEach((element) => {
+    element.value = element.value.replaceAll("#", "[hash]");
+    csv += element.keys + "," + element.value + "\n";
+  });
+
+  console.log(csv);
+
+  var btn = $("#downloadJSON");
+  btn.html("Download");
+  btn.attr("href", "data:text/csv;charset=utf-8," + csv);
+  btn.attr("download", "json2excel.csv");
+
+  btn.click();
+}
