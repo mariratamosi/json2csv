@@ -1,120 +1,138 @@
-console.log("hey")
+console.log("hey");
 
-fetch(`test.json`).then((response) => {
+fetch(`test.json`)
+  .then((response) => {
     return response.json();
-}).then((data) => {
+  })
+  .then((data) => {
     console.log(data);
     let result = flattenData(data);
-    console.log("json to flatten data ",result);
+    console.log("json to flatten data ", result);
 
-    result.map((items)=>{
-        items.keys = items.keys.split(",");
-    })
-    
+    createExcel(result);
+
+    result.map((items) => {
+      items.keys = items.keys.split(",");
+    });
+
     let reverseResult = createNestedJson(JSON.parse(JSON.stringify(result)));
-    console.log("flatten data to json ",reverseResult);
-}).catch((err) => {
-    console.warn('json file not loaded.', err);
-});
+    console.log("flatten data to json ", reverseResult);
+  })
+  .catch((err) => {
+    console.warn("json file not loaded.", err);
+  });
 
-var createNestedJson=(data)=>{
-    if (data.length==0) {
-        //console.log(data);
-        return;
-    }
-
-    if (data[0].keys.length==0){
-        //console.log("final value "+data[0].value);
-        return data[0].value;
-    }
-
+var createNestedJson = (data) => {
+  if (data.length == 0) {
     //console.log(data);
+    return;
+  }
 
-    
-    let groupBater = data[0].keys[0];
+  if (data[0].keys.length == 0) {
+    //console.log("final value "+data[0].value);
+    return data[0].value;
+  }
 
-    let result = {};
-    let secondResult = {};
+  //console.log(data);
 
-    let firstGroup = data.filter((items)=>{
-        return items.keys.indexOf(groupBater)==0;
-    })
+  let groupBater = data[0].keys[0];
 
-    let secondGroup = data.filter((items)=>{
-        return items.keys.indexOf(groupBater)!=0;
-    });
+  let result = {};
+  let secondResult = {};
 
-    firstGroup.map((items)=>{
-        items.keys.shift();
-    });
+  let firstGroup = data.filter((items) => {
+    return items.keys.indexOf(groupBater) == 0;
+  });
 
+  let secondGroup = data.filter((items) => {
+    return items.keys.indexOf(groupBater) != 0;
+  });
 
-    //console.log(firstGroup);
+  firstGroup.map((items) => {
+    items.keys.shift();
+  });
 
-    //console.log(secondGroup);
+  //console.log(firstGroup);
 
-    result[groupBater] = createNestedJson(firstGroup);
-    secondResult = createNestedJson(secondGroup);
+  //console.log(secondGroup);
 
-    return {...result,...secondResult};
-}
+  result[groupBater] = createNestedJson(firstGroup);
+  secondResult = createNestedJson(secondGroup);
 
-var flattenData=(data)=>{
-    
-    let result=[];
-    for (let props in data){
-        let value = data[props];
+  return { ...result, ...secondResult };
+};
 
-        if (typeof(value)=="string"){
-            result.push({
-                keys: props,
-                value: value
-            });
-            continue;
-        }
+var flattenData = (data) => {
+  let result = [];
+  for (let props in data) {
+    let value = data[props];
 
-        let tempResult = flattenData(value);
-
-        tempResult.map((items)=>{
-                items.keys=props+","+items.keys;
-        });
-        result=result.concat(tempResult);
+    if (typeof value == "string") {
+      result.push({
+        keys: props,
+        value: value,
+      });
+      continue;
     }
-    return result;
-}
+
+    let tempResult = flattenData(value);
+
+    tempResult.map((items) => {
+      items.keys = props + "/" + items.keys;
+    });
+    result = result.concat(tempResult);
+  }
+  return result;
+};
 
 $(document).ready(function () {
-    
-    $('#jsonInput').change(function(e){
-        var fileName = e.target.files[0].name;
-        console.log('The file "' + fileName +  '" has been selected.');
+  $("#jsonInput").change(function (e) {
+    var fileName = e.target.files[0].name;
+    console.log('The file "' + fileName + '" has been selected.');
 
-        readFile(e.target)
-    });
-
-
-
+    readFile(e.target);
+  });
 });
 
 function readFile(input) {
-    let file = input.files[0];
-  
-    let reader = new FileReader();
-  
-    reader.readAsText(file);
-  
-    reader.onload = function() {
-      console.log(JSON.parse(reader.result));
-      let jsonData = JSON.parse(reader.result);
-      let flattenJSON = flattenData(jsonData);
+  let file = input.files[0];
 
-      console.log(flattenJSON);
-      //convert it to excel, make it downloadable
+  let reader = new FileReader();
 
-    };
-  
-    reader.onerror = function() {
-      console.log(reader.error);
-    };
-  
-  }
+  reader.readAsText(file);
+
+  reader.onload = function () {
+    console.log(JSON.parse(reader.result));
+    let jsonData = JSON.parse(reader.result);
+    let flattenJSON = flattenData(jsonData);
+
+    console.log(flattenJSON);
+    createExcel(flattenJSON);
+    //convert it to excel, make it downloadable
+  };
+
+  reader.onerror = function () {
+    console.log(reader.error);
+  };
+}
+
+function createExcel(jsonData) {
+  let csv = "";
+
+  jsonData.forEach((element) => {
+    csv += element.keys + "," + element.value + "\n";
+  });
+
+  console.log(csv);
+  // let btn = document.getElementById("downloadJSON");
+  // btn.innerText="Download";
+  // btn.href = 'data:text/csv;charset=utf-8,' + csv;
+  // btn.download = "json2excel" +'.csv';
+
+  var btn = $("#downloadJSON");
+  btn.html("Download");
+  btn.attr("href", "data:text/csv;charset=utf-8," + csv);
+  btn.attr("download", "json2excel.csv");
+
+  btn.click();
+}
