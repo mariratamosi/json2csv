@@ -24,21 +24,34 @@ function readCSVInputFile() {
       });
 
       let result = [];
+      console.log(csvrows);
 
       csvrows.forEach((item) => {
-        let itemData = item.split(",");
-        result.push({
-          keys: itemData[0].split("/"),
-          value: itemData[1],
-        });
+        let checkEscape = item.indexOf(", ");
+        if (checkEscape != -1) {
+          item = item.replaceAll(", ", "[escapeComma]");
+          console.log("checkEscape " + checkEscape);
+        }
+        let itemData = item.split(","); //but not
+        console.log(item);
+        if (itemData[2] != undefined) {
+          result.push({
+            keys: itemData[0].split("/"),
+            value: itemData[2]
+              .trim()
+              .replaceAll("[escapeComma]", ", ")
+              .replace(/(^")|("$)/g, ""),
+          });
+        }
       });
+
+      console.log(csvrows);
 
       let jsonResult = createNestedJson(result);
       createJsonFile(jsonResult);
       console.log(jsonResult);
-      console.log(props);
     };
-    reader.readAsText($("#csv-input")[0].files[0]);
+    reader.readAsText($("#csv-input")[0].files[0], "utf-8");
   } else {
     alert("Sorry! Your browser does not support HTML5!");
   }
