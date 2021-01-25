@@ -48,7 +48,7 @@ function readCSVInputFile() {
       console.log(csvrows);
 
       let jsonResult = createNestedJson(result);
-      createJsonFile(jsonResult);
+      createJsonFile(jsonResult, "download-json", "csv2json.json");
       console.log(jsonResult);
     };
     reader.readAsText($("#csv-input")[0].files[0], "utf-8");
@@ -57,13 +57,13 @@ function readCSVInputFile() {
   }
 }
 
-function createJsonFile(storageObj) {
+function createJsonFile(storageObj, id, filename) {
   var dataStr =
     "data:text/json;charset=utf-8," +
     encodeURIComponent(JSON.stringify(storageObj));
-  var dlAnchorElem = document.getElementById("download-json");
+  var dlAnchorElem = document.getElementById(id);
   dlAnchorElem.setAttribute("href", dataStr);
-  dlAnchorElem.setAttribute("download", "csv2json.json");
+  dlAnchorElem.setAttribute("download", filename);
 }
 
 var createNestedJson = (data) => {

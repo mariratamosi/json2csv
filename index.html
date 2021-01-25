@@ -34,17 +34,29 @@
         <h4>Excel to json</h4>
         <button onclick="" style="display: inline">Upload excel file</button>
         <input type="file" id="excel-input" accept="text/csv" />
+        <a id="download-excel-json" href="#" target="_blank">
+          Download Excel json</a
+        >
 
-        <div style="margin-top: 40px">
-          <label for="key">Key column header:</label>
-          <input type="text" id="json-key" name="key" value /><br /><br />
-          <label for="json-value">Value column header:</label>
-          <input type="text" id="json-value" name="json-value" /><br /><br />
+        <div id="checkbox-contaner" style="margin-top: 40px; display: none">
+          <div id="keys-checkbox-contaner">
+            <h4>Select key column header</h4>
+          </div>
+
+          <div id="values-checkbox-contaner">
+            <h4>Select value column header</h4>
+          </div>
+          <a id="convert-to-json" href="#" target="_blank"> convert to json </a>
         </div>
-
-        <a id="convert-to-json" href="#" target="_blank"> convert to json </a>
       </div>
     </div>
+
+    <template id="template-checkbox">
+      <div>
+        <input type="checkbox" class="radio" id="scales" name="keys" />
+        <label for="keys">Scales</label>
+      </div>
+    </template>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
