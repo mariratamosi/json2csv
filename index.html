@@ -14,7 +14,7 @@
   </head>
   <body>
     <div class="container" style="margin: 100px">
-      <h1>Excel to json</h1>
+      <h1>CSV to json/JSON to CSV</h1>
       <div>
         <h4>JSON to CSV</h4>
         <button onclick="" style="display: inline">Upload json file</button>
@@ -25,14 +25,34 @@
       </div>
       <div style="margin-top: 40px">
         <h4>CSV to json</h4>
-        <button onclick="" style="display: inline">Upload excel file</button>
+        <button onclick="" style="display: inline">Upload CSV file</button>
         <input type="file" id="csv-input" accept="text/csv" />
         <a id="download-json" href="#" target="_blank"> Download json</a>
       </div>
+
+      <div style="margin-top: 40px">
+        <h4>Excel to json</h4>
+        <button onclick="" style="display: inline">Upload excel file</button>
+        <input type="file" id="excel-input" accept="text/csv" />
+
+        <div style="margin-top: 40px">
+          <label for="key">Key column header:</label>
+          <input type="text" id="json-key" name="key" value /><br /><br />
+          <label for="json-value">Value column header:</label>
+          <input type="text" id="json-value" name="json-value" /><br /><br />
+        </div>
+
+        <a id="convert-to-json" href="#" target="_blank"> convert to json </a>
+      </div>
     </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+
     <script src="jquery-2.1.1.min.js" async defer></script>
     <script src="json-csv.js" async defer></script>
     <script src="csv-json.js" async defer></script>
+    <script src="excel-json.js" async defer></script>
     <script src="test.js" async defer></script>
   </body>
 </html>

@@ -9,7 +9,6 @@ $(document).ready(function () {
   $("#jsonInput").change(function (e) {
     var fileName = e.target.files[0].name;
     console.log('The file "' + fileName + '" has been selected.');
-
     readJSONFile(e.target);
   });
 });
