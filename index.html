@@ -34,7 +34,12 @@
         <h4>Excel to json</h4>
         <button onclick="" style="display: inline">Upload excel file</button>
         <input type="file" id="excel-input" accept="text/csv" />
-        <a id="download-excel-json" href="#" target="_blank">
+        <a
+          id="download-excel-json"
+          href="#"
+          target="_blank"
+          style="display: none"
+        >
           Download Excel json</a
         >
 
@@ -52,7 +57,7 @@
     </div>
 
     <template id="template-checkbox">
-      <div>
+      <div class="single-checkbox">
         <input type="checkbox" class="radio" id="scales" name="keys" />
         <label for="keys">Scales</label>
       </div>

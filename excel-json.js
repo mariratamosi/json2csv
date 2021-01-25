@@ -13,15 +13,15 @@ $(document).ready(function () {
       valueColumn
     );
 
-    console.log(result);
+    $("#checkbox-contaner").hide();
+    $("#download-excel-json").show();
   });
 
   $(document).on("change", "#excel-input", function (e) {
     e.preventDefault();
     console.log("excel input changed", e);
-    $("#keys-checkbox-contaner input").remove();
-    $("#values-checkbox-contaner input").remove();
-
+    $(".single-checkbox").remove();
+    $("#download-excel-json").hide();
     FileToBeConverted = e.target.files[0];
     ExcelToJSONConverter = new ExcelToJSON();
     ExcelToJSONConverter.parseExcel(FileToBeConverted);
@@ -74,6 +74,7 @@ var ExcelToJSON = function () {
 
       $("#keys-checkbox-contaner").append(newNode);
       $("#values-checkbox-contaner").append(newNode2);
+      $("#checkbox-contaner").show();
       $("#checkbox-contaner").show();
 
       setEventListenerForCheckbox();
