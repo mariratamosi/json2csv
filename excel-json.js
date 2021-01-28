@@ -5,12 +5,17 @@ $(document).ready(function () {
     let keyColumn = $("#keys-checkbox-contaner input:checked").attr("name");
     let valueColumn = $("#values-checkbox-contaner input:checked").attr("name");
 
+    let backupColumn = $("#values-backup-checkbox-contaner input:checked").attr(
+      "name"
+    );
+
     console.log(keyColumn);
     console.log(valueColumn);
 
     let result = ExcelToJSONConverter.convertToKeyValuePairedJSON(
       keyColumn,
-      valueColumn
+      valueColumn,
+      backupColumn
     );
 
     $("#checkbox-contaner").hide();
@@ -35,15 +40,26 @@ var ExcelToJSON = function () {
   this.convertedRawJSON = null;
   this.keyValueJson = null;
 
-  this.convertToKeyValuePairedJSON = function (keyColumn, valueColumn) {
+  this.convertToKeyValuePairedJSON = function (
+    keyColumn,
+    valueColumn,
+    backupColumn
+  ) {
     console.log(this);
     let result = [];
     for (let i = 0; i < this.convertedRawJSON.length; i++) {
       let cur = this.convertedRawJSON[i];
 
+      let value = cur[valueColumn];
+      if (!value && backupColumn) {
+        value = cur[backupColumn];
+      }
+      value = value.replaceAll("[hash]", "#");
+      value = value.replaceAll("[Hash]", "#");
+
       result.push({
         keys: cur[keyColumn].split("/"),
-        value: cur[valueColumn],
+        value: value,
       });
     }
 
@@ -65,6 +81,7 @@ var ExcelToJSON = function () {
       let item = temp.content.querySelector("div");
       let newNode = document.importNode(item, true);
       let newNode2 = document.importNode(item, true);
+      let newNode3 = document.importNode(item, true);
 
       $(newNode).children("label").text(keys[i]);
       $(newNode).children("input").attr("name", keys[i]);
@@ -72,9 +89,13 @@ var ExcelToJSON = function () {
       $(newNode2).children("label").text(keys[i]);
       $(newNode2).children("input").attr("name", keys[i]);
 
+      $(newNode3).children("label").text(keys[i]);
+      $(newNode3).children("input").attr("name", keys[i]);
+
       $("#keys-checkbox-contaner").append(newNode);
       $("#values-checkbox-contaner").append(newNode2);
-      $("#checkbox-contaner").show();
+      $("#values-backup-checkbox-contaner").append(newNode3);
+
       $("#checkbox-contaner").show();
 
       setEventListenerForCheckbox();

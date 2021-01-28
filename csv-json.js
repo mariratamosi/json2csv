@@ -60,7 +60,7 @@ function readCSVInputFile() {
 function createJsonFile(storageObj, id, filename) {
   var dataStr =
     "data:text/json;charset=utf-8," +
-    encodeURIComponent(JSON.stringify(storageObj));
+    encodeURIComponent(JSON.stringify(storageObj, undefined, 2));
   var dlAnchorElem = document.getElementById(id);
   dlAnchorElem.setAttribute("href", dataStr);
   dlAnchorElem.setAttribute("download", filename);
